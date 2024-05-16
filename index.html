@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape Room</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .puzzle {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .puzzle-piece {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            border: 1px solid #333;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Escape Room!</h1>
+    <p>You find yourself trapped in a mysterious room...</p>
+    <button onclick="startGame()">Start</button>
+
+    <div id="room1" class="hidden">
+        <h2>Room 1</h2>
+        <p>You've entered the first room.</p>
+        <p>Can you find the hidden message?</p>
+        <div class="puzzle">
+            <div class="puzzle-piece" onclick="rotatePiece(1, 1)">1</div>
+        </div>
+        <div id="room1Key" class="hidden">
+            <p>You found the key to the next room!</p>
+            <button onclick="enterNextRoom(2)">Enter Next Room</button>
+        </div>
+    </div>
+
+    <div id="room2" class="hidden">
+        <h2>Room 2</h2>
+        <p>Welcome to the second room.</p>
+        <p>Can you solve the sliding puzzle?</p>
+        <div class="puzzle">
+            <div class="puzzle-piece" onclick="slidePiece(2, 1)">1</div>
+            <div class="puzzle-piece" onclick="slidePiece(2, 2)">2</div>
+            <div class="puzzle-piece" onclick="slidePiece(2, 3)">3</div>
+        </div>
+        <div id="room2Key" class="hidden">
+            <p>You found the key to the next room!</p>
+            <button onclick="enterNextRoom(3)">Enter Next Room</button>
+        </div>
+    </div>
+
+    <div id="room3" class="hidden">
+        <h2>Room 3</h2>
+        <p>Welcome to the third room.</p>
+        <p>Can you complete the maze?</p>
+        <div class="puzzle">
+            <div class="puzzle-piece" onclick="navigateMaze(3)">Navigate Maze</div>
+        </div>
+        <div id="room3Key" class="hidden">
+            <p>You found the key to the final room!</p>
+            <button onclick="enterNextRoom(4)">Enter Final Room</button>
+        </div>
+    </div>
+
+    <div id="finalRoom" class="hidden">
+        <h2>Final Room</h2>
+        <p>Congratulations! You've reached the final room.</p>
+        <p>Can you unlock the door and escape?</p>
+        <div class="puzzle">
+            <div class="puzzle-piece" onclick="dragAndRotate(4, 1)">1</div>
+            <div class="puzzle-piece" onclick="dragAndRotate(4, 2)">2</div>
+            <div class="puzzle-piece" onclick="dragAndRotate(4, 3)">3</div>
+            <div class="puzzle-piece" onclick="dragAndRotate(4, 4)">4</div>
+        </div>
+        <div id="escaped" class="hidden">
+            <p>Congratulations!</p>
+            <p>You've escaped the room!</p>
+        </div>
+    </div>
+
+    <script>
+        let solvedPuzzles = [];
+
+        function startGame() {
+            document.getElementById('room1').classList.remove('hidden');
+            document.querySelector('button').classList.add('hidden');
+        }
+
+        function rotatePiece(room, piece) {
+            alert("Rotate the puzzle piece to reveal a hidden symbol!");
+            solvedPuzzles.push({ room, piece });
+            checkPuzzleSolved(room);
+        }
+
+        function slidePiece(room, piece) {
+            alert("Slide the puzzle piece along the track to unlock something!");
+            solvedPuzzles.push({ room, piece });
+            checkPuzzleSolved(room);
+        }
+
+        function navigateMaze(room) {
+            alert("Navigate through the maze to find the exit!");
+            solvedPuzzles.push({ room });
+            checkPuzzleSolved(room);
+        }
+
+        function dragAndRotate(room, piece) {
+            alert("Drag and rotate the puzzle pieces into the correct positions!");
+            solvedPuzzles.push({ room, piece });
+            checkPuzzleSolved(room);
+        }
+
+        function checkPuzzleSolved(room) {
+            if (room === 1 && solvedPuzzles.some(puzzle => puzzle.room === 1 && puzzle.piece === 1)) {
+                document.getElementById('room1Key').classList.remove('hidden');
+            } else if (room === 2 && solvedPuzzles.some(puzzle => puzzle.room === 2 && puzzle.piece === 1) &&
+                solvedPuzzles.some(puzzle => puzzle.room === 2 && puzzle.piece === 2) &&
+                solvedPuzzles.some(puzzle => puzzle.room === 2 && puzzle.piece === 3)) {
+                document.getElementById('room2Key').classList.remove('hidden');
+            } else if (room === 3 && solvedPuzzles.some(puzzle => puzzle.room === 3)) {
+                document.getElementById('room3Key').classList.remove('hidden');
+            } else if (room === 4 && solvedPuzzles.some(puzzle => puzzle.room === 4 && puzzle.piece === 1) &&
+                solvedPuzzles.some(puzzle => puzzle.room === 4 && puzzle.piece === 2) &&
+                solvedPuzzles.some(puzzle => puzzle.room === 4 && puzzle.piece === 3) &&
+                solvedPuzzles.some(puzzle => puzzle.room === 4 && puzzle.piece === 4)) {
+                document.getElementById('finalRoom').classList.add('hidden');
+                document.getElementById('escaped').classList.remove('hidden');
+            }
+        }
+
+        function enterNextRoom(room) {
+            document.getElementById('room' + room).classList.remove('hidden');
+            document.getElementById('room' + (room - 1)).classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
